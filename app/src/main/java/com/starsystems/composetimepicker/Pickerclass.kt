@@ -2,9 +2,11 @@ package com.starsystems.composetimepicker
 
 import android.graphics.Color
 import android.os.Bundle
+import android.view.MotionEvent
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.compose.foundation.Image
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.material.MaterialTheme
 import androidx.compose.material.Surface
@@ -23,11 +25,14 @@ import com.starsystems.composetimepicker.ui.theme.ComposeTimePickerTheme
 
 class Pickerclass: ComponentActivity() {
 
+    lateinit var customView: NumberPicker
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContent {
             ComposeTimePickerTheme {
                 // A surface container using the 'background' color from the theme
+                customView = NumberPicker(applicationContext)
                 Surface(color = MaterialTheme.colors.background) {
                     TimeChange()
                 }
@@ -65,7 +70,14 @@ class Pickerclass: ComponentActivity() {
             Box(
                 modifier = Modifier
                     .height(50.dp)
-                    .fillMaxWidth(),
+                    .fillMaxWidth()
+                    .clickable {
+                        val oldVal: Int
+                        var newVal: Int
+                        oldVal = customView.getValue()
+                        newVal = oldVal + 1
+                        customView.setValue(newVal)
+                    },
                 contentAlignment = Alignment.Center
             ) {
                 Image(
@@ -83,7 +95,6 @@ class Pickerclass: ComponentActivity() {
 
     @Composable
     private fun DateSelecter() {
-        val customView = NumberPicker(applicationContext)
         customView.setDividerThickness(0)
         customView.wheelItemCount = 1
         customView.setBackgroundColor(Color.parseColor("#a8a8a8"))
